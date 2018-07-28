@@ -1,0 +1,48 @@
+{
+  "name": "react-resize-context",
+  "version": "1.0.0",
+  "description": "A high performance React component for responding to resize event",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "rm -rf ./dist && tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeetCode-OpenSource/react-resize-context.git"
+  },
+  "keywords": [
+    "react",
+    "resize",
+    "detector"
+  ],
+  "bugs": {
+    "url": "https://github.com/LeetCode-OpenSource/react-resize-context/issues"
+  },
+  "homepage": "https://github.com/LeetCode-OpenSource/react-resize-context#readme",
+  "author": "LeetCode front-end team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/element-resize-detector": "^1.1.0",
+    "@types/lodash": "^4.14.115",
+    "@types/prop-types": "^15.5.4",
+    "@types/react": "^16.4.7",
+    "@types/shallowequal": "^0.2.3",
+    "tslib": "^1.9.3",
+    "tslint": "^5.11.0",
+    "tslint-eslint-rules": "^5.3.1",
+    "tslint-react": "^3.6.0",
+    "tslint-sonarts": "^1.7.0",
+    "typescript": "^2.9.2"
+  },
+  "dependencies": {
+    "element-resize-detector": "^1.1.14",
+    "lodash": "^4.17.10",
+    "shallowequal": "^1.1.0"
+  },
+  "peerDependencies": {
+    "prop-types": "^15.6.2",
+    "react": "^16.3.0"
+  }
+}
