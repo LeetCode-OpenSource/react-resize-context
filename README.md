@@ -12,7 +12,7 @@ npm install react-resize-context
 ```
 
 
-## API
+## APIs
 Provides a `{ ResizeProvider, ResizeConsumer }` pair which just like React's [Context API](https://reactjs.org/docs/context.html). When renders a context `ResizeConsumer`, it will linsten to the resize event from the [children](https://reactjs.org/docs/jsx-in-depth.html#children-in-jsx) of closest matching `ResizeProvider` above it in the tree.
 
 ### \<ResizeProvider \/\>
