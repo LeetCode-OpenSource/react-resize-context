@@ -1,8 +1,6 @@
-import * as React from 'react';
 import * as shallowequal from 'shallowequal';
 
-import { ResizeChildren, Size } from './types';
-import { ReactNode, Ref } from 'react';
+import { Size } from './types';
 
 export function getSize(element: HTMLElement): Size {
   return {
@@ -13,28 +11,6 @@ export function getSize(element: HTMLElement): Size {
 
 export function isRefObject(ref: any): boolean {
   return ref && typeof ref === 'object' && 'current' in ref;
-}
-
-export function getElement(children?: ResizeChildren | null): HTMLElement | null {
-  const element =
-    children &&
-    children.ref &&
-    children.ref.current;
-  return element || null;
-}
-
-export function makeSureChildrenHasRef(
-  children: ReactNode
-): ResizeChildren | null {
-  if (React.isValidElement(children)) {
-    if (isRefObject((children as ResizeChildren).ref)) {
-      return children;
-    } else {
-      return React.cloneElement<{ ref?: Ref<HTMLElement> }>(
-        children, { ref: React.createRef() }
-      ) as ResizeChildren;
-    }
-  } else return null;
 }
 
 function compareDataset(

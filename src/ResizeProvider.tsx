@@ -1,30 +1,19 @@
 import * as React from 'react';
+import { findDOMNode } from 'react-dom';
 
 import { Provider } from './context';
 import Listener from './Listener';
-import { getElement, makeSureChildrenHasRef } from './methods';
-
-import { ResizeChildren } from './types';
-import { ReactNode } from 'react';
 
 interface Props {
-  children?: ReactNode;
+  children: React.ReactNode;
 }
 
 interface State {
-  children: ResizeChildren | null;
   element: HTMLElement | null;
 }
 
 export default class ResizeProvider extends React.PureComponent<Props, State> {
-  public static getDerivedStateFromProps(props: Props) {
-    return {
-      children: makeSureChildrenHasRef(props.children),
-    };
-  }
-
   public state: State = {
-    children: null,
     element: null,
   };
 
@@ -43,13 +32,18 @@ export default class ResizeProvider extends React.PureComponent<Props, State> {
   public render() {
     return (
       <Provider value={{ listenElement: this.state.element }}>
-        {this.state.children}
+        {this.props.children}
       </Provider>
     );
   }
 
+  private getElement() {
+    const element = findDOMNode(this);
+    return element instanceof HTMLElement ? element : null;
+  }
+
   private updateListenElement() {
-    const element = getElement(this.state.children);
+    const element = this.getElement();
 
     if (element !== this.state.element) {
       this.removeListenElement();
