@@ -9,10 +9,6 @@ export function getSize(element: HTMLElement): Size {
   };
 }
 
-export function isRefObject(ref: any): boolean {
-  return ref && typeof ref === 'object' && 'current' in ref;
-}
-
 function compareDataset(
   currentValue: any,
   nextValue: any,
