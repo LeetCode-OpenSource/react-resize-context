@@ -1,59 +1,75 @@
-import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import { omit } from 'lodash';
 
-import { HTMLAttributes, RefObject } from 'react';
+import { HTMLAttributes, ReactNode, RefObject, FunctionComponent } from 'react';
 
 import { Consumer, ContextValue } from './context';
 import Listener from './Listener';
-import { isRefObject, updateElementDataAttributes } from './methods';
+import { updateElementDataAttributes } from './methods';
 
 import { Size } from './types';
 
-interface ForwardRefProps extends HTMLAttributes<HTMLDivElement> {
+interface ExternalProps extends HTMLAttributes<HTMLDivElement> {
+  innerRef?: RefObject<HTMLDivElement>;
   onSizeChanged?: (size: Size) => void;
   updateDatasetBySize?: (size: Size) => DOMStringMap;
+  children?: ReactNode | FunctionComponent<Size>;
 }
 
-interface Props extends ForwardRefProps {
+interface Props extends ExternalProps {
+  innerRef: RefObject<HTMLDivElement>;
   context: ContextValue;
-  forwardedRef: RefObject<HTMLDivElement>;
 }
 
-class ResizeConsumer extends React.PureComponent<Props> {
+interface State {
+  size?: Size; // update only when children is function component
+}
+
+class ResizeConsumer extends React.PureComponent<Props, State> {
+  state: State = {
+    size: undefined,
+  };
+
   private currentListenElement: HTMLElement | null = null;
 
   private get divProps() {
     return omit(this.props, [
-      'context',
-      'forwardedRef',
+      'innerRef',
       'onSizeChanged',
       'updateDatasetBySize',
+      'children',
+      'context',
     ]);
   }
 
-  public componentDidMount() {
+  componentDidMount() {
     this.updateListener();
   }
 
-  public componentDidUpdate() {
+  componentDidUpdate() {
     this.updateListener();
   }
 
-  public componentWillUnmount() {
+  componentWillUnmount() {
     this.stopListen();
   }
 
-  public render() {
+  render() {
+    const { size } = this.state;
+    const { innerRef, children } = this.props;
+
     return (
-      <div {...this.divProps} ref={this.props.forwardedRef}>
-        {this.props.children}
+      <div {...this.divProps} ref={innerRef}>
+        {typeof children === 'function'
+          ? (size && (children as FunctionComponent<Size>)(size))
+          : children
+        }
       </div>
     );
   }
 
   private updateAttribute = (size: Size) => {
-    const element = this.props.forwardedRef.current;
+    const element = this.props.innerRef.current;
     if (element && typeof this.props.updateDatasetBySize === 'function') {
       const newDataAttributes = this.props.updateDatasetBySize(size);
       updateElementDataAttributes(element, newDataAttributes);
@@ -61,9 +77,14 @@ class ResizeConsumer extends React.PureComponent<Props> {
   };
 
   private onSizeChanged = (size: Size) => {
+    if (typeof this.props.children === 'function') {
+      this.setState({ size });
+    }
+
     if (typeof this.props.onSizeChanged === 'function') {
       this.props.onSizeChanged(size);
     }
+
     this.updateAttribute(size);
   };
 
@@ -94,32 +115,14 @@ class ResizeConsumer extends React.PureComponent<Props> {
   }
 }
 
-const ForwardRef = React.forwardRef<HTMLDivElement, ForwardRefProps>(
-  (props, ref) => (
-    <Consumer>
-      {(context) => (
-        <ResizeConsumer
-          {...props}
-          context={context}
-          forwardedRef={
-            isRefObject(ref)
-              ? (ref as RefObject<HTMLDivElement>)
-              : React.createRef()
-          }
-        />
-      )}
-    </Consumer>
-  ),
+export default ({ innerRef = React.createRef(), ...props }: ExternalProps) => (
+  <Consumer>
+    {(context) => (
+      <ResizeConsumer
+        {...props}
+        context={context}
+        innerRef={innerRef}
+      />
+    )}
+  </Consumer>
 );
-
-ForwardRef.propTypes = {
-  onSizeChanged: PropTypes.func,
-  updateDatasetBySize: PropTypes.func,
-};
-
-ForwardRef.defaultProps = {
-  onSizeChanged: undefined,
-  updateDatasetBySize: undefined,
-};
-
-export default ForwardRef;
