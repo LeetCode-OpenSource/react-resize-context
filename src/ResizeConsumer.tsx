@@ -43,11 +43,11 @@ class ResizeConsumer extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    this.updateListener();
+    this.updateListenerIfNeed();
   }
 
   componentDidUpdate() {
-    this.updateListener();
+    this.updateListenerIfNeed();
   }
 
   componentWillUnmount() {
@@ -88,9 +88,9 @@ class ResizeConsumer extends React.PureComponent<Props, State> {
     this.updateAttribute(size);
   };
 
-  private updateListener(
-    nextListenElement: HTMLElement | null = this.props.context.listenElement,
-  ) {
+  private updateListenerIfNeed() {
+    const nextListenElement = this.props.context.listenElement;
+
     if (this.currentListenElement !== nextListenElement) {
       this.startListenTo(nextListenElement);
     }
@@ -107,10 +107,8 @@ class ResizeConsumer extends React.PureComponent<Props, State> {
 
   private stopListen() {
     if (this.currentListenElement) {
-      Listener.shared.stopListenTo(
-        this.currentListenElement,
-        this.onSizeChanged,
-      );
+      Listener.shared.stopListenTo(this.currentListenElement, this.onSizeChanged);
+      this.currentListenElement = null
     }
   }
 }
