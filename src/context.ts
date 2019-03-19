@@ -1,9 +1,11 @@
 import * as React from 'react';
 
+import { Size } from './types';
+
 export interface ContextValue {
-  listenElement: HTMLElement | null;
+  size: Size | null;
 }
 
 export const { Provider, Consumer } = React.createContext<ContextValue>({
-  listenElement: null,
+  size: null,
 });

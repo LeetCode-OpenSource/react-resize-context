@@ -1,60 +1,58 @@
 import * as React from 'react';
 import { findDOMNode } from 'react-dom';
 
-import { Provider } from './context';
-import Listener from './Listener';
+import { ContextValue, Provider } from './context';
+import { getResizeDetector, getSize } from './methods';
 
-interface Props {
-  children: React.ReactNode;
-}
-
-interface State {
-  element: HTMLElement | null;
-}
-
-export default class ResizeProvider extends React.PureComponent<Props, State> {
-  public state: State = {
-    element: null,
+export default class ResizeProvider extends React.PureComponent<{}, ContextValue> {
+  readonly state: ContextValue = {
+    size: null,
   };
 
-  public componentDidMount() {
-    this.updateListenElement();
+  private currentListenElement: HTMLElement | null = null;
+
+  componentDidMount() {
+    this.updateListenElement()
   }
 
-  public componentWillUnmount() {
-    this.removeListenElement();
+  componentWillUnmount() {
+    this.removeListener(this.currentListenElement);
   }
 
-  public render() {
+  render() {
     return (
-      <Provider value={{ listenElement: this.state.element }}>
+      <Provider value={this.state}>
         {this.props.children}
       </Provider>
     );
   }
 
-  public updateListenElement() {
-    const element = this.getElement();
-
-    if (element !== this.state.element) {
-      this.removeListenElement();
-
-      if (element) {
-        Listener.shared.startListen(element);
-      }
-
-      this.setState({ element });
-    }
+  updateListenElement() {
+    this.listenTo(this.getElement())
   }
+
+  private onSizeChanged = (element: HTMLElement) => {
+    this.setState({ size: getSize(element) })
+  };
 
   private getElement() {
     const element = findDOMNode(this);
     return element instanceof HTMLElement ? element : null;
   }
 
-  private removeListenElement() {
-    if (this.state.element) {
-      Listener.shared.stopListen(this.state.element);
+  private listenTo(element: HTMLElement | null) {
+    this.removeListener(this.currentListenElement);
+
+    this.currentListenElement = element;
+
+    if (element) {
+      getResizeDetector().listenTo(element, this.onSizeChanged)
+    }
+  }
+
+  private removeListener(element: HTMLElement | null) {
+    if (element) {
+      getResizeDetector().removeListener(element, this.onSizeChanged)
     }
   }
 }

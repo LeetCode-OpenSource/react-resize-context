@@ -1,4 +1,6 @@
+import * as elementResizeDetectorMaker from 'element-resize-detector';
 import * as shallowequal from 'shallowequal';
+import { once } from 'lodash';
 
 import { Size } from './types';
 
@@ -7,6 +9,22 @@ export function getSize(element: HTMLElement): Size {
     height: element.clientHeight,
     width: element.clientWidth,
   };
+}
+
+export function isHeightChanged(sizeA: Size | null, sizeB: Size | null): boolean {
+  if (sizeA && sizeB) {
+    return sizeA.height !== sizeB.height;
+  } else {
+    return true;
+  }
+}
+
+export function isWidthChanged(sizeA: Size | null, sizeB: Size | null): boolean {
+  if (sizeA && sizeB) {
+    return sizeA.width !== sizeB.width;
+  } else {
+    return true;
+  }
 }
 
 function compareDataset(
@@ -41,3 +59,5 @@ export function updateElementDataAttributes(
     });
   }
 }
+
+export const getResizeDetector = once(() => elementResizeDetectorMaker({ strategy: 'scroll' }));

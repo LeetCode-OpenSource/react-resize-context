@@ -4,8 +4,7 @@ import { omit } from 'lodash';
 import { HTMLAttributes, ReactNode, RefObject, FunctionComponent } from 'react';
 
 import { Consumer, ContextValue } from './context';
-import Listener from './Listener';
-import { updateElementDataAttributes } from './methods';
+import { updateElementDataAttributes, isWidthChanged, isHeightChanged } from './methods';
 
 import { Size } from './types';
 
@@ -21,17 +20,7 @@ interface Props extends ExternalProps {
   context: ContextValue;
 }
 
-interface State {
-  size?: Size; // update only when children is function component
-}
-
-class ResizeConsumer extends React.PureComponent<Props, State> {
-  state: State = {
-    size: undefined,
-  };
-
-  private currentListenElement: HTMLElement | null = null;
-
+class ResizeConsumer extends React.PureComponent<Props> {
   private get divProps() {
     return omit(this.props, [
       'innerRef',
@@ -42,21 +31,17 @@ class ResizeConsumer extends React.PureComponent<Props, State> {
     ]);
   }
 
-  componentDidMount() {
-    this.updateListenerIfNeed();
-  }
-
-  componentDidUpdate() {
-    this.updateListenerIfNeed();
-  }
-
-  componentWillUnmount() {
-    this.stopListen();
+  componentDidUpdate(prevProps: Props) {
+    if (
+      isWidthChanged(prevProps.context.size, this.props.context.size) ||
+      isHeightChanged(prevProps.context.size, this.props.context.size)
+    ) {
+      this.onSizeChanged()
+    }
   }
 
   render() {
-    const { size } = this.state;
-    const { innerRef, children } = this.props;
+    const { innerRef, children, context: { size } } = this.props;
 
     return (
       <div {...this.divProps} ref={innerRef}>
@@ -68,6 +53,18 @@ class ResizeConsumer extends React.PureComponent<Props, State> {
     );
   }
 
+  private onSizeChanged = () => {
+    const { size } = this.props.context;
+
+    if (size) {
+      if (typeof this.props.onSizeChanged === 'function') {
+        this.props.onSizeChanged(size);
+      }
+
+      this.updateAttribute(size);
+    }
+  };
+
   private updateAttribute = (size: Size) => {
     const element = this.props.innerRef.current;
     if (element && typeof this.props.updateDatasetBySize === 'function') {
@@ -75,42 +72,6 @@ class ResizeConsumer extends React.PureComponent<Props, State> {
       updateElementDataAttributes(element, newDataAttributes);
     }
   };
-
-  private onSizeChanged = (size: Size) => {
-    if (typeof this.props.children === 'function') {
-      this.setState({ size });
-    }
-
-    if (typeof this.props.onSizeChanged === 'function') {
-      this.props.onSizeChanged(size);
-    }
-
-    this.updateAttribute(size);
-  };
-
-  private updateListenerIfNeed() {
-    const nextListenElement = this.props.context.listenElement;
-
-    if (this.currentListenElement !== nextListenElement) {
-      this.startListenTo(nextListenElement);
-    }
-  }
-
-  private startListenTo(element: HTMLElement | null) {
-    this.stopListen();
-
-    if (element) {
-      Listener.shared.startListenTo(element, this.onSizeChanged);
-      this.currentListenElement = element;
-    }
-  }
-
-  private stopListen() {
-    if (this.currentListenElement) {
-      Listener.shared.stopListenTo(this.currentListenElement, this.onSizeChanged);
-      this.currentListenElement = null
-    }
-  }
 }
 
 export default ({ innerRef = React.createRef(), ...props }: ExternalProps) => (
