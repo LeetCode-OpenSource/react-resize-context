@@ -1,10 +1,9 @@
 import * as elementResizeDetectorMaker from 'element-resize-detector';
-import * as shallowequal from 'shallowequal';
 import { once } from 'lodash';
 
 import { getSize } from './methods';
 
-import { OnResizeCallBack, Size } from './types';
+import { OnResizeCallBack } from './types';
 
 const getSharedListener = once(() => new Listener());
 
@@ -16,8 +15,6 @@ export default class Listener {
   private resizeDetector = elementResizeDetectorMaker({ strategy: 'scroll' });
 
   private callbacks = new Map<HTMLElement, Set<OnResizeCallBack>>();
-
-  private prevSize?: Size;
 
   public startListenTo(element: HTMLElement, func: OnResizeCallBack) {
     if (element instanceof Element && typeof func === 'function') {
@@ -54,11 +51,7 @@ export default class Listener {
 
     if (callbacks) {
       const size = getSize(element);
-
-      if (!shallowequal(this.prevSize, size)) {
-        this.prevSize = size;
-        callbacks.forEach((func) => func(size));
-      }
+      callbacks.forEach((func) => func(size));
     }
   };
 }
