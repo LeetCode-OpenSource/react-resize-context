@@ -21,10 +21,6 @@ export default class ResizeProvider extends React.PureComponent<Props, State> {
     this.updateListenElement();
   }
 
-  public componentDidUpdate() {
-    this.updateListenElement();
-  }
-
   public componentWillUnmount() {
     this.removeListenElement();
   }
@@ -37,12 +33,7 @@ export default class ResizeProvider extends React.PureComponent<Props, State> {
     );
   }
 
-  private getElement() {
-    const element = findDOMNode(this);
-    return element instanceof HTMLElement ? element : null;
-  }
-
-  private updateListenElement() {
+  public updateListenElement() {
     const element = this.getElement();
 
     if (element !== this.state.element) {
@@ -54,6 +45,11 @@ export default class ResizeProvider extends React.PureComponent<Props, State> {
 
       this.setState({ element });
     }
+  }
+
+  private getElement() {
+    const element = findDOMNode(this);
+    return element instanceof HTMLElement ? element : null;
   }
 
   private removeListenElement() {
