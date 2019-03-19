@@ -9,6 +9,7 @@
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "noImplicitAny": true,
+    "skipLibCheck": true,
     "strict": true,
     "noImplicitReturns": true,
     "moduleResolution": "node",
