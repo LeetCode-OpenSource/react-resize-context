@@ -6,6 +6,6 @@ export interface ContextValue {
   size: Size | null;
 }
 
-export const { Provider, Consumer } = React.createContext<ContextValue>({
-  size: null,
-});
+export const Context = React.createContext<ContextValue>({ size: null });
+
+export const { Provider, Consumer } = Context;

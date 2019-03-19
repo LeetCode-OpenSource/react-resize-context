@@ -27,12 +27,12 @@
     "@types/element-resize-detector": "^1.1.0",
     "@types/lodash": "^4.14.115",
     "@types/prop-types": "^15.5.4",
-    "@types/react": "^16.4.7",
-    "@types/react-dom": "^16.0.7",
+    "@types/react": "^16.8.8",
+    "@types/react-dom": "^16.8.2",
     "@types/shallowequal": "^0.2.3",
     "prop-types": "^15.6.2",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
     "tslib": "^1.9.3",
     "tslint": "^5.11.0",
     "tslint-eslint-rules": "^5.3.1",
@@ -47,7 +47,7 @@
   },
   "peerDependencies": {
     "prop-types": "^15.6.2",
-    "react": "^16.3.0",
-    "react-dom": "^16.4.2"
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
   }
 }
