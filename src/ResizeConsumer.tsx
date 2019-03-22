@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { omit } from 'lodash';
 
-import { HTMLAttributes, ReactNode, RefObject, FunctionComponent } from 'react';
+import { HTMLAttributes, ReactNode, RefObject } from 'react';
 
 import { Consumer, ContextValue } from './context';
 import { updateElementDataAttributes, isWidthChanged, isHeightChanged } from './methods';
@@ -12,7 +12,7 @@ interface ExternalProps extends HTMLAttributes<HTMLDivElement> {
   innerRef?: RefObject<HTMLDivElement>;
   onSizeChanged?: (size: Size) => void;
   updateDatasetBySize?: (size: Size) => DOMStringMap;
-  children?: ReactNode | FunctionComponent<Size>;
+  children?: ReactNode;
 }
 
 interface Props extends ExternalProps {
@@ -41,14 +41,11 @@ class ResizeConsumer extends React.PureComponent<Props> {
   }
 
   render() {
-    const { innerRef, children, context: { size } } = this.props;
+    const { innerRef, children } = this.props;
 
     return (
       <div {...this.divProps} ref={innerRef}>
-        {typeof children === 'function'
-          ? (size && (children as FunctionComponent<Size>)(size))
-          : children
-        }
+        {children}
       </div>
     );
   }
