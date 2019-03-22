@@ -1,6 +1,6 @@
 {
   "name": "react-resize-context",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "A high performance React component for responding to resize event",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
