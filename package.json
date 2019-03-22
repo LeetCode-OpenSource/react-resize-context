@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "element-resize-detector": "^1.1.14",
+    "fastdom": "^1.0.9",
     "lodash": "^4.17.10",
     "shallowequal": "^1.1.0"
   },

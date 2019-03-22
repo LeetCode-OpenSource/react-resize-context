@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { findDOMNode } from 'react-dom';
+import * as fastdom from 'fastdom';
 
+import { Size } from './types';
 import { ContextValue, Provider } from './context';
 import { getResizeDetector, getSize } from './methods';
 
@@ -10,6 +12,10 @@ export default class ResizeProvider extends React.PureComponent<{}, ContextValue
   };
 
   private currentListenElement: HTMLElement | null = null;
+
+  private measureID?: any;
+
+  private mutateID?: any;
 
   componentDidMount() {
     this.updateListenElement()
@@ -32,7 +38,20 @@ export default class ResizeProvider extends React.PureComponent<{}, ContextValue
   }
 
   private onSizeChanged = (element: HTMLElement) => {
-    this.setState({ size: getSize(element) })
+    fastdom.clear(this.measureID);
+
+    this.measureID = fastdom.measure(() => {
+      const size = getSize(element);
+      this.updateSize(size)
+    })
+  };
+
+  private updateSize = (size: Size) => {
+    fastdom.clear(this.mutateID);
+
+    this.mutateID = fastdom.mutate(() => {
+      this.setState({ size: size })
+    })
   };
 
   private getElement() {
