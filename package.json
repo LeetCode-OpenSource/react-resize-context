@@ -29,7 +29,7 @@
     "@types/prop-types": "^15.5.4",
     "@types/react": "^16.8.8",
     "@types/react-dom": "^16.8.2",
-    "@types/shallowequal": "^0.2.3",
+    "@types/shallowequal": "^1.1.1",
     "prop-types": "^15.6.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",

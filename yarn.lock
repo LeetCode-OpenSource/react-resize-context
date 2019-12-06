@@ -48,10 +48,10 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/shallowequal@^0.2.3":
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/@types/shallowequal/-/shallowequal-0.2.4.tgz#f0e7d265b574f7b2b85cb008af4e76653fe99eeb"
-  integrity sha512-q1GRm+R3hWk334SeLAoy3EFpyCbsKMb5bGxwglrIOrp9Zu4WDwqPxrcrGz1ccCmQ57dn2+yDpWEQKpjqb4cU3Q==
+"@types/shallowequal@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@types/shallowequal/-/shallowequal-1.1.1.tgz#aad262bb3f2b1257d94c71d545268d592575c9b1"
+  integrity sha512-Lhni3aX80zbpdxRuWhnuYPm8j8UQaa571lHP/xI4W+7BAFhSIhRReXnqjEgT/XzPoXZTJkCqstFMJ8CZTK6IlQ==
 
 ansi-styles@^3.2.1:
   version "3.2.1"
