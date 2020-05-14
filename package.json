@@ -33,7 +33,7 @@
     "prop-types": "^15.6.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
-    "tslib": "^1.9.3",
+    "tslib": "^2.0.0",
     "tslint": "^5.11.0",
     "tslint-eslint-rules": "^5.3.1",
     "tslint-react": "^4.1.0",
